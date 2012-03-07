@@ -36,7 +36,7 @@
 ;; instruction with the instruction with the address inserted
 ;; into the addr field.
 (define (attach-to-a instr addr)
-  '...
+  (A addr (A-value instr))
   )
 
 ;; CONTRACT

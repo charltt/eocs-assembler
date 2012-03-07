@@ -26,8 +26,21 @@
 ;; language instruction.
 (define (parse-one-line asm)
   (match asm
-    ;; Handle blank lines.
     [(regexp "^\\s*$") 'blank-line]
+    [(regexp DCJ-REGEXP)
+     (C 'no-line (extract-dest asm) (extract-comp asm) (extract-jump asm))]
+    [(regexp CJ-REGEXP)
+     (C 'no-line 'no-dest (extract-comp asm) (extract-jump asm))]
+    [(regexp DC-REGEXP)
+     (C 'no-line (extract-dest asm) (extract-comp asm) 'no-jump)]
+    [(regexp C-REGEXP)
+     (C 'no-line 'no-dest (extract-comp asm) 'no-jump)]
+    [(regexp ANUM-REGEXP)
+     (A 'no-line (@inst->number asm))]
+    [(regexp ASYM-REGEXP)
+     (A 'no-line (@inst->symbol asm))]
+    [(regexp LABEL-REGEXP)
+     (label 'no-line (string->symbol (second (regexp-match LABEL-REGEXP asm))))]
     ;; If all else fails, emit a parse bogon.
     [else 'parse-bogon]
     ))
