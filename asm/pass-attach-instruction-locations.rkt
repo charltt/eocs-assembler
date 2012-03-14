@@ -46,7 +46,7 @@
 ;; instruction with the instruction with the address inserted
 ;; into the addr field.
 (define (attach-to-c instr addr)
-  '...
+  (C addr (C-dest instr) (C-comp instr) (C-jump instr))
   )
 
 ;; CONTRACT
@@ -56,7 +56,7 @@
 ;; instruction with the instruction with the address inserted
 ;; into the addr field.
 (define (attach-to-label instr addr)
-  '...
+  (label addr (label-name instr))
   )
 
 ;; CONTRACT
@@ -72,6 +72,9 @@
     ;; Handle A, C, and label instructions
     ;; You should not need an 'else' case.
     ;; It only exists for tests.
+    [(A? (first loi)) (cons (attach-to-a (first loi) addr) (ail (rest loi) (+ 1 addr)))]
+    [(C? (first loi)) (cons (attach-to-c (first loi) addr) (ail (rest loi) (+ 1 addr)))]
+    [(label? (first loi)) (cons (attach-to-label (first loi) addr) (ail (rest loi) addr))]
     [else '...]
     ))
 
